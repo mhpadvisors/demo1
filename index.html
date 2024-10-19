@@ -7,19 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Your CSS and Scripts -->
-</head>
-<body>
-    <h1>MHP Deal Evaluator</h1>
-    <!<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MHP Deal Evaluator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -210,7 +197,61 @@
 
         <!-- Charts Section -->
         <div class="charts-container">
-           
->
+            <!-- Your chart containers here -->
+        </div>
+
+        <!-- Export Buttons -->
+        <div class="button-group">
+            <button onclick="calculateResults()">Calculate</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to save data to local storage
+        function saveData(field) {
+            const value = document.getElementById(field).value;
+            localStorage.setItem(field, value);
+        }
+
+        // Function to load data from local storage on page load
+        window.onload = function() {
+            const fields = ['parkName', 'address', 'city', 'state', 'zip', 'lotRent',
+            'numLots', 'vacancyRate', 'badDebt', 'ganda', 'insurance', 'payroll', 'maintenance', 'taxes', 'utilities'];
+
+            fields.forEach(field => {
+                const value = localStorage.getItem(field);
+                if (value !== null) {
+                    document.getElementById(field).value = value;
+                }
+            });
+        }
+
+        // Function to calculate the results
+        function calculateResults() {
+            const lotRent = parseFloat(document.getElementById('lotRent').value) || 0;
+            const numLots = parseFloat(document.getElementById('numLots').value) || 0;
+            const vacancyRate = parseFloat(document.getElementById('vacancyRate').value) / 100 || 0;
+            const badDebt = parseFloat(document.getElementById('badDebt').value) / 100 || 0;
+
+            let totalIncome = (lotRent * numLots) * (1 - vacancyRate) * (1 - badDebt);
+
+            const ganda = totalIncome * (parseFloat(document.getElementById('ganda').value) / 100 || 0);
+            const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+            const payroll = parseFloat(document.getElementById('payroll').value) || 0;
+            const maintenance = parseFloat(document.getElementById('maintenance').value) || 0;
+            const taxes = parseFloat(document.getElementById('taxes').value) || 0;
+            const utilities = parseFloat(document.getElementById('utilities').value) || 0;
+
+            let totalExpenses = ganda + insurance + payroll + maintenance + taxes + utilities;
+            let noi = totalIncome - totalExpenses;
+            let noiMargin = (noi / totalIncome) * 100;
+
+            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2);
+            document.getElementById('noi').textContent = noi.toFixed(2);
+            document.getElementById('noiMargin').textContent = noiMargin.toFixed(2);
+        }
+    </script>
+
 </body>
 </html>

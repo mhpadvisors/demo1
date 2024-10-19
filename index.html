@@ -215,8 +215,8 @@
 
         // Function to load data from local storage on page load
         window.onload = function() {
-            const fields = ['parkName', 'address', 'city', 'state', 'zip', 'lotRent',
-            'numLots', 'vacancyRate', 'badDebt', 'ganda', 'insurance', 'payroll', 'maintenance', 'taxes', 'utilities'];
+            const fields = ['parkName', 'address', 'city', 'state', 'zip', 'lotRent', 'numLots
+            'vacancyRate', 'badDebt', 'ganda', 'insurance', 'payroll', 'maintenance', 'taxes', 'utilities'];
 
             fields.forEach(field => {
                 const value = localStorage.getItem(field);
@@ -233,8 +233,20 @@
             const vacancyRate = parseFloat(document.getElementById('vacancyRate').value) / 100 || 0;
             const badDebt = parseFloat(document.getElementById('badDebt').value) / 100 || 0;
 
-            let totalIncome = (lotRent * numLots) * (1 - vacancyRate) * (1 - badDebt);
+            // Step 1: Calculate monthly income without adjustments
+            let monthlyIncome = lotRent * numLots;
 
+            // Step 2: Calculate adjustments for vacancy and bad debt
+            let vacancyAdjustment = monthlyIncome * vacancyRate;
+            let badDebtAdjustment = monthlyIncome * badDebt;
+
+            // Step 3: Calculate net monthly income
+            let netMonthlyIncome = monthlyIncome - vacancyAdjustment - badDebtAdjustment;
+
+            // Step 4: Calculate annual total income
+            let totalIncome = netMonthlyIncome * 12;
+
+            // Step 5: Calculate expenses and NOI
             const ganda = totalIncome * (parseFloat(document.getElementById('ganda').value) / 100 || 0);
             const insurance = parseFloat(document.getElementById('insurance').value) || 0;
             const payroll = parseFloat(document.getElementById('payroll').value) || 0;
@@ -246,6 +258,7 @@
             let noi = totalIncome - totalExpenses;
             let noiMargin = (noi / totalIncome) * 100;
 
+            // Update the results on the page
             document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
             document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2);
             document.getElementById('noi').textContent = noi.toFixed(2);

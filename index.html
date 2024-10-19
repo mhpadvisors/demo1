@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHP Deal Evaluator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Your CSS and Scripts -->
+</head>
+<body>
+    <h1>MHP Deal Evaluator</h1>
+    <!<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHP Deal Evaluator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        input:focus, select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        .charts-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .chart-box {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+        .results {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        .results p {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            h1 {
+                font-size: 20px;
+            }
+            h2 {
+                font-size: 18px;
+            }
+            button {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>MHP Deal Evaluator</h1>
+
+        <!-- Park Information Form -->
+        <h2>Park Information</h2>
+        <label for="parkName">Park Name</label>
+        <input type="text" id="parkName" placeholder="Enter park name" oninput="saveData('parkName')">
+        <div id="parkNameError" class="error"></div>
+
+        <label for="address">Address</label>
+        <input type="text" id="address" placeholder="Enter address" oninput="saveData('address')">
+        <div id="addressError" class="error"></div>
+
+        <label for="city">City</label>
+        <input type="text" id="city" placeholder="Enter city" oninput="saveData('city')">
+        <div id="cityError" class="error"></div>
+
+        <label for="state">State</label>
+        <select id="state" onchange="saveData('state')">
+            <option value="">Select State</option>
+            <option value="AL">Alabama</option>
+            <option value="CA">California</option>
+        </select>
+        <div id="stateError" class="error"></div>
+
+        <label for="zip">Zip Code</label>
+        <input type="text" id="zip" placeholder="Enter zip code" maxlength="5" oninput="saveData('zip')">
+        <div id="zipError" class="error"></div>
+
+        <!-- Income Assumptions -->
+        <h2>Community Income Assumptions</h2>
+        <label for="lotRent">Lot Rent (per lot per month)</label>
+        <input type="number" id="lotRent" placeholder="Enter lot rent" oninput="saveData('lotRent')" min="0">
+        <div id="lotRentError" class="error"></div>
+
+        <label for="numLots">Number of Lots</label>
+        <input type="number" id="numLots" placeholder="Enter number of lots" oninput="saveData('numLots')" min="0">
+        <div id="numLotsError" class="error"></div>
+
+        <label for="vacancyRate">Vacancy Rate (%)</label>
+        <input type="number" id="vacancyRate" placeholder="Enter vacancy rate" oninput="saveData('vacancyRate')" min="0" max="100">
+        <div id="vacancyRateError" class="error"></div>
+
+        <label for="badDebt">Bad Debt Adjustment (%)</label>
+        <input type="number" id="badDebt" placeholder="Enter bad debt adjustment" oninput="saveData('badDebt')" min="0" max="100">
+        <div id="badDebtError" class="error"></div>
+
+        <!-- Expense Assumptions -->
+        <h2>Expense Assumptions</h2>
+        <label for="ganda">G&A Expenses (%)</label>
+        <input type="number" id="ganda" placeholder="Enter G&A percentage" oninput="saveData('ganda')" min="0" max="100">
+        <div id="gandaError" class="error"></div>
+
+        <label for="insurance">Insurance, Legal, Licenses</label>
+        <input type="number" id="insurance" placeholder="Enter insurance expenses" oninput="saveData('insurance')" min="0">
+        <div id="insuranceError" class="error"></div>
+
+        <label for="payroll">Payroll Expenses</label>
+        <input type="number" id="payroll" placeholder="Enter payroll expenses" oninput="saveData('payroll')" min="0">
+        <div id="payrollError" class="error"></div>
+
+        <label for="maintenance">Repairs & Maintenance</label>
+        <input type="number" id="maintenance" placeholder="Enter maintenance expenses" oninput="saveData('maintenance')" min="0">
+        <div id="maintenanceError" class="error"></div>
+
+        <label for="taxes">Property Taxes</label>
+        <input type="number" id="taxes" placeholder="Enter property taxes" oninput="saveData('taxes')" min="0">
+        <div id="taxesError" class="error"></div>
+
+        <label for="utilities">Utilities</label>
+        <input type="number" id="utilities" placeholder="Enter utility expenses" oninput="saveData('utilities')" min="0">
+        <div id="utilitiesError" class="error"></div>
+
+        <!-- Results Section -->
+        <div class="results">
+            <h2>Results</h2>
+            <p><strong>Total Income:</strong> $<span id="totalIncome">0</span></p>
+            <p><strong>Total Expenses:</strong> $<span id="totalExpenses">0</span></p>
+            <p><strong>Net Operating Income (NOI):</strong> $<span id="noi">0</span></p>
+            <p><strong>NOI Margin:</strong> <span id="noiMargin">0</span>%</p>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-container">
+           
+>
+</body>
+</html>
